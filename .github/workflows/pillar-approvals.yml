@@ -1,0 +1,95 @@
+name: pillar-approvals
+on:
+  workflow_call:
+    secrets:
+      PILLAR_CHECK_TOKEN:
+        required: true
+permissions:
+  pull-requests: read
+  contents: read
+jobs:
+  pillar-approvals:
+    name: pillar-approvals
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Validate required pillar and peer reviews
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.PILLAR_CHECK_TOKEN }}
+          script: |
+            // No checkout or PR-controlled code: only authenticated API metadata.
+            const {owner, repo} = context.repo;
+            const number = context.payload.pull_request?.number;
+            if (!number) { core.setFailed('Pull request context is required'); return; }
+            const {data: pr} = await github.rest.pulls.get({owner, repo, pull_number:number});
+            const head = pr.head.sha;
+            const failures = [];
+            const pillars = ['infrastructure','development','business-erps','endpoint-engineering','cybersecurity'];
+            const labels = pr.labels.map(x => x.name).filter(x => x.startsWith('pillar:'));
+            const requested = labels.map(x => x.slice(7));
+            const invalid = requested.filter(x => !pillars.includes(x));
+            if (invalid.length) failures.push('Unknown pillar labels: ' + invalid.join(', '));
+            if (!requested.some(x => pillars.includes(x) && x !== 'cybersecurity'))
+              failures.push('Impact assessment requires a non-CyberSecurity pillar label');
+            const required = [...new Set(requested.filter(x => pillars.includes(x)).concat('cybersecurity'))];
+            const reviews = await github.paginate(github.rest.pulls.listReviews,{owner,repo,pull_number:number,per_page:100});
+            const latest = new Map();
+            for (const review of reviews) {
+              const login = review.user?.login?.toLowerCase();
+              if (!login || login === pr.user.login.toLowerCase()) continue;
+              const old = latest.get(login);
+              if (!old || Number(review.id) > Number(old.id)) latest.set(login,review);
+            }
+            const approved = [...latest.values()].filter(r => r.state === 'APPROVED' && r.commit_id === head && r.submitted_at);
+            const cache = new Map();
+            async function member(team, login) {
+              const key = team + ':' + login.toLowerCase();
+              if (!cache.has(key)) {
+                try {
+                  const {data} = await github.rest.teams.getMembershipForUserInOrg({org:owner,team_slug:team,username:login});
+                  cache.set(key,data.state === 'active');
+                } catch (error) {
+                  if (error.status === 404) cache.set(key,false);
+                  else throw new Error('Cannot verify team membership; check token permissions and organization access');
+                }
+              }
+              return cache.get(key);
+            }
+            const byTeam = new Map();
+            for (const team of [...new Set(required.concat('its-peer-reviewers'))]) {
+              const found = [];
+              for (const r of approved) if (await member(team,r.user.login)) found.push(r);
+              found.sort((a,b) => Date.parse(a.submitted_at)-Date.parse(b.submitted_at));
+              byTeam.set(team,found);
+            }
+            const selected = new Map();
+            for (const team of required.filter(x => x !== 'cybersecurity')) {
+              const candidates = byTeam.get(team);
+              if (!candidates.length) failures.push('Missing current-head approval: '+team);
+              else selected.set(team,candidates[0]);
+            }
+            const peers = byTeam.get('its-peer-reviewers');
+            if (!peers.length) failures.push('Missing current-head technical peer approval');
+            const security = byTeam.get('cybersecurity').find(sec =>
+              required.filter(x => x !== 'cybersecurity').every(team =>
+                byTeam.get(team).length > 0 && byTeam.get(team).every(r => Date.parse(r.submitted_at) < Date.parse(sec.submitted_at))) &&
+              peers.some(peer => peer.user.login.toLowerCase() !== sec.user.login.toLowerCase() &&
+                Date.parse(peer.submitted_at) < Date.parse(sec.submitted_at)));
+            if (!security) failures.push('CyberSecurity must approve after every other required pillar and a distinct technical peer');
+            else selected.set('cybersecurity',security);
+            const rows = pillars.map(team => [
+              team, required.includes(team) ? 'yes' : 'no',
+              selected.get(team)?.user.login || '—',
+              !required.includes(team) ? 'Not requested; manual impact acknowledgement required' : selected.has(team) ? 'approved' : 'missing'
+            ]);
+            rows.push(['its-peer-reviewers','yes',peers.map(r=>r.user.login).join(', ') || '—',peers.length ? 'approved' : 'missing']);
+            const {data: current} = await github.rest.pulls.get({owner,repo,pull_number:number});
+            if (current.head.sha !== head || JSON.stringify(current.labels.map(x=>x.name).sort()) !== JSON.stringify(pr.labels.map(x=>x.name).sort()))
+              failures.push('PR head or labels changed during evaluation; rerun on current metadata');
+            await core.summary.addHeading('Five-pillar approval assessment')
+              .addRaw('Candidate: '+head+'\n')
+              .addTable([['pillar','required','approver','status'],...rows])
+              .addRaw('\nAll five impact assessments, CAB authorization, additional owners and label changes still require maintainer verification.\n')
+              .write();
+            if (failures.length) core.setFailed(failures.join('; '));

@@ -54,6 +54,10 @@ Escalation and elapsed dates do not grant approval or override a required review
 
 ## Maintainer verification and production authorization
 
+### Change authorization
+
+CAB / TeamDynamix change number:
+
 Final candidate and approval evidence location (use PR/change-system links for final approvals when committing this record would change the candidate):
 
 Maintainer verification of all required routes, final-commit approvals, documentation, tests, findings, and checks:

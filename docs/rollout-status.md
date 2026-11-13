@@ -10,6 +10,8 @@ The central template baseline is [9997d62d9b12a2fa3fbbda5940571d6b4fd2aa64](http
 | jamf-mac-setup | a1a1bfbc15fb9cf8e9454039d8265e8402ff5e42 | [PR #1](https://github.com/mcccd-IT-Operations/jamf-mac-setup/pull/1) |
 | windows-dcu-compliance | af47acd94c41c0a2ae37e0890d3ddd2ff4210df5 | [PR #1](https://github.com/mcccd-IT-Operations/windows-dcu-compliance/pull/1) |
 
-These are preparation snapshots, not approval SHAs. Follow each PR for later changes and require final-commit approvals. Adobe landing documentation may be provisioned separately without merging the code candidate. No reviewer invitations, team assignments, branch rules, automated synchronization, required checks or production deployment are configured by this distribution. Existing rules edited independently by administrators must be verified separately.
+These are preparation snapshots, not approval SHAs. Follow each PR for later changes and require final-commit approvals. Adobe landing documentation may be provisioned separately without merging the code candidate. Owner activation is tracked in [administrator setup](./approval-process.md). Existing rules edited independently by administrators must be verified separately.
 
 Validation: central relative Markdown links checked; project update links checked against update files plus retained project packages. Source scripts are unchanged by framework edits. DCU noncomment content comparison and Word byte comparisons pass; PowerShell parser/runtime and Windows/DCU actions were not performed. Review findings remain project-local.
+
+Status: [framework adoption, approval and enforcement status](https://github.com/mcccd-IT-Operations/.github/blob/main/GOVERNANCE.md#enforcement-and-related-records).
