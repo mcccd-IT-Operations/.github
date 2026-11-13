@@ -20,7 +20,7 @@ jobs:
           if (-not $files.Count) { Write-Host 'No PowerShell files; skipping'; exit 0 }
           Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -Repository PSGallery
           $findings = @($files | ForEach-Object {
-            Invoke-ScriptAnalyzer -LiteralPath $_.FullName -Severity Error,Warning
+            Invoke-ScriptAnalyzer -Path $_.FullName -Severity Error,Warning
           })
           $findings | Format-Table -AutoSize
           if ($findings.Count) { exit 1 }
