@@ -27,6 +27,6 @@ There is no scheduled synchronization, bot, workflow or automated enforcement co
 | jamf-blueprints-iac | review/jamf-blueprints-python-initial | docs/APPROVAL.md |
 | jamf-computer-group-erase | review/sanitized-erase-script | docs/APPROVAL.md |
 | jamf-mac-setup | review/mac-setup-revision-11a | docs/APPROVAL.md |
-| windows-dcu-compliance | review/dcu-compliance-initial (planned during provisioning) | docs/APPROVAL.md |
+| windows-dcu-compliance | review/dcu-compliance-initial | docs/APPROVAL.md |
 
 Project updates stay in draft reviews until approved. Their main branches may still contain only initial stubs. Do not infer adoption or production approval from this inventory. The central defaults are published on main for use; formal policy approval is tracked separately in [APPROVAL.md](./APPROVAL.md).
