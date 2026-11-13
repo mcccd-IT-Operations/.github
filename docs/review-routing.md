@@ -28,3 +28,5 @@ These are assessment prompts, not evidence that any named service is affected by
 Changes to the review policy, documentation standard, routing rules, or approval templates affect all five pillars. All five are required reviewers of this proposal. Each representative can identify further affected parties. Adoption remains pending until their decisions are recorded.
 
 Use the [routing record template](../templates/review-routing-record.md), or open a review-routing issue and link it to the PR. An issue/checklist alone is not a GitHub approval or enforced merge gate.
+
+Status: [framework adoption, approval and enforcement status](https://github.com/mcccd-IT-Operations/.github/blob/main/GOVERNANCE.md#enforcement-and-related-records).

@@ -1,0 +1,54 @@
+name: lint
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: PowerShell analysis
+        shell: pwsh
+        run: |
+          $files = @(Get-ChildItem -LiteralPath . -Recurse -File -Filter '*.ps1' |
+            Where-Object { $_.FullName -notmatch '[\\/][.]git[\\/]' })
+          if (-not $files.Count) { Write-Host 'No PowerShell files; skipping'; exit 0 }
+          Install-Module PSScriptAnalyzer -Scope CurrentUser -Force -Repository PSGallery
+          $findings = @($files | ForEach-Object {
+            Invoke-ScriptAnalyzer -LiteralPath $_.FullName -Severity Error,Warning
+          })
+          $findings | Format-Table -AutoSize
+          if ($findings.Count) { exit 1 }
+      - name: ShellCheck and Zsh syntax
+        shell: bash
+        run: |
+          mapfile -d '' scripts < <(git ls-files -z -- '*.sh' '*.zsh')
+          if (( ${#scripts[@]} == 0 )); then echo 'No shell scripts; skipping'; exit 0; fi
+          sudo apt-get update
+          sudo apt-get install --yes shellcheck zsh
+          for file in "${scripts[@]}"; do
+            first="$(head -n 1 -- "$file")"
+            if [[ "$first" == *zsh* ]]; then
+              echo "Zsh syntax check (ShellCheck does not support Zsh): $file"
+              zsh -n -- "$file"
+            elif [[ "$first" == *bash* || "$first" == '#!/bin/sh' || "$first" == '#!/usr/bin/env sh' ]]; then
+              shellcheck -- "$file"
+            elif [[ "$file" == *.zsh ]]; then
+              echo "Zsh syntax check: $file"
+              zsh -n -- "$file"
+            else
+              shellcheck --shell=bash -- "$file"
+            fi
+          done
+      - name: Python Ruff analysis
+        shell: bash
+        run: |
+          mapfile -d '' files < <(git ls-files -z -- '*.py')
+          if (( ${#files[@]} == 0 )); then echo 'No Python files; skipping'; exit 0; fi
+          python -m pip install --disable-pip-version-check ruff
+          ruff check -- "${files[@]}"

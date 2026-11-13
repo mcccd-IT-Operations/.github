@@ -1,6 +1,6 @@
 # Review routing and approval record
 
-Status: PENDING ROUTING / REVIEW — NOT APPROVED FOR PRODUCTION.
+Status: [framework adoption, approval and enforcement status](https://github.com/mcccd-IT-Operations/.github/blob/main/GOVERNANCE.md#enforcement-and-related-records).
 
 Change / project / issue: Organization review framework ITS-REVIEW-1. All five pillars are required for policy adoption; unassigned/pending.
 
@@ -53,6 +53,8 @@ Escalation to relevant pillar lead and project/change owner, if needed:
 Escalation and elapsed dates do not grant approval or override a required reviewer.
 
 ## Maintainer verification and production authorization
+
+CAB / TeamDynamix change number:
 
 Final candidate and approval evidence location (use PR/change-system links for final approvals when committing this record would change the candidate):
 

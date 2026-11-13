@@ -34,4 +34,8 @@ Technical peer other than author:
 Final CyberSecurity approver distinct from author and peer, after required reviews:
 Maintainer verification and separate production authorization:
 
+### Change authorization
+
+CAB / TeamDynamix change number:
+
 Missing approvals or unresolved routes can delay the project. Record blocker, owner, next action, follow-up and schedule impact. Silence is not approval. New changes require reassessment and final-commit approvals. Checklists/templates do not enforce GitHub merge rules.

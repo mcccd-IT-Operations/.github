@@ -37,3 +37,5 @@ Example:
 Confirm that notes match the code and help each routed pillar evaluate its own impact. Ask for clarification when purpose, affected parties, parameters, side effects, verification, or recovery are unclear. Mark incomplete documentation as a finding instead of approving based on assumptions.
 
 For released code, propose documentation changes on the review branch and version them transparently. Do not silently replace an already published release asset or tag. Retain historical baselines and immutable review snapshots; publish separately identified candidates for later changes.
+
+Status: [framework adoption, approval and enforcement status](https://github.com/mcccd-IT-Operations/.github/blob/main/GOVERNANCE.md#enforcement-and-related-records).

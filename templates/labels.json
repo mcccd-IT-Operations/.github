@@ -1,0 +1,47 @@
+[
+  {
+    "name": "pillar:infrastructure",
+    "color": "1D76DB",
+    "description": "Pillar approval required"
+  },
+  {
+    "name": "pillar:development",
+    "color": "1D76DB",
+    "description": "Pillar approval required"
+  },
+  {
+    "name": "pillar:business-erps",
+    "color": "1D76DB",
+    "description": "Pillar approval required"
+  },
+  {
+    "name": "pillar:endpoint-engineering",
+    "color": "1D76DB",
+    "description": "Pillar approval required"
+  },
+  {
+    "name": "pillar:cybersecurity",
+    "color": "1D76DB",
+    "description": "Pillar approval required"
+  },
+  {
+    "name": "state:pending-assessment",
+    "color": "FBCA04",
+    "description": "Review state"
+  },
+  {
+    "name": "state:changes-requested",
+    "color": "FBCA04",
+    "description": "Review state"
+  },
+  {
+    "name": "state:blocked",
+    "color": "FBCA04",
+    "description": "Review state"
+  },
+  {
+    "name": "state:approved",
+    "color": "FBCA04",
+    "description": "Review state"
+  }
+]
