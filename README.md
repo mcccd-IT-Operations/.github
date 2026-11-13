@@ -27,6 +27,7 @@ Obtain technical peer review, required impact reviews and final CyberSecurity ap
 | [jamf-computer-group-erase](https://github.com/mcccd-IT-Operations/jamf-computer-group-erase) | Sanitized computer-group erase workflow | [Draft review](https://github.com/mcccd-IT-Operations/jamf-computer-group-erase/pull/1); private, pending |
 | [jamf-mac-setup](https://github.com/mcccd-IT-Operations/jamf-mac-setup) | Mac onboarding Revision 11A and operator guides | [Draft review](https://github.com/mcccd-IT-Operations/jamf-mac-setup/pull/1); private, pending |
 | [windows-dcu-compliance](https://github.com/mcccd-IT-Operations/windows-dcu-compliance) | Dell Command Update PowerShell compliance script and two supplied guides | [Draft review](https://github.com/mcccd-IT-Operations/windows-dcu-compliance/pull/1); private, pending |
+| [intune-device-naming](https://github.com/mcccd-IT-Operations/intune-device-naming) | Intune/Autopilot endpoint and Azure naming API, Graph permission helper, guide and blank workbook | [Draft review](https://github.com/mcccd-IT-Operations/intune-device-naming/pull/1); private, pending |
 
 Each independent tool/package has its own repository; dependent scripts, alternative implementations and guides stay with that tool. Local uploads do not create a native GitHub fork relationship. Python and API are organizational categories; new independent projects receive their own repositories rather than being placed in this policy repository.
 
